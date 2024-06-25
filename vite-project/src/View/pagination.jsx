@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 export default function Pagination({ links, fetchNextPrevTasks }) {
     return (
-        <nav className="text-center mt-4 shadow-sm w-64 p-5">
+        <nav className="text-center mt-4 shadow-sm w-full p-5">
             {links.map((link, index) => (
                 <button
                     key={index}
@@ -12,11 +12,11 @@ export default function Pagination({ links, fetchNextPrevTasks }) {
                         }
                         e.preventDefault();
                     }}
-                    className={`inline-block py-2 px-3 rounded-lg text-gray-200 text-xs ${
+                    className={`inline-block py-2 px-3 rounded-lg text-xs hover:text-white transition-colors duration-200 ${
                         link.active
-                            ? "bg-gray-950 hover:bg-gray-950"
-                            : "hover:bg-gray-950"
-                    } ${!link.url ? "!text-gray-500 cursor-not-allowed" : ""}`}
+                            ? "bg-gray-950 hover:bg-gray-950 text-white"
+                            : "hover:bg-gray-950 text-gray-600"
+                    } ${!link.url ? "!text-gray-300 cursor-not-allowed" : ""}`}
                     dangerouslySetInnerHTML={{ __html: link.label }}
                 />
             ))}

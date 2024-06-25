@@ -16,10 +16,10 @@ const router = createBrowserRouter([
         children: [
             {
                 path: "/",
-                element: <Navigate to="/users" />, // Redirect to /users
+                element: <Navigate to="/users" />,
             },
             {
-                element: <ProtectedRoute />, // Wrap the protected routes
+                element: <ProtectedRoute />,
                 children: [
                     {
                         path: "/users",

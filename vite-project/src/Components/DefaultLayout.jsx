@@ -19,7 +19,7 @@ function DefaultLayout() {
     const logout = async (e) => {
         if (e) e.preventDefault();
         await axiosClient.get("/logout").then(() => {
-            sessionStorage.clear();
+            localStorage.clear();
             setUser(null);
             setToken(null);
         });
@@ -40,30 +40,6 @@ function DefaultLayout() {
 
     return (
         <>
-            {/* <nav className="bg-gray-800 p-4">
-                <div className="container mx-auto flex justify-between items-center">
-                    <div className="flex items-center">
-                        <Link to="/" className="text-white text-xl font-bold">
-                            DADOTS
-                        </Link>
-                    </div>
-
-                    <div className="flex items-center">
-                        <label className="text-white mx-2 font-light">
-                            {user.name}
-                        </label>
-                        <label className="text-white">|</label>
-                        <Link
-                            href="#"
-                            onClick={logout}
-                            className="text-white font-light mx-2 flex items-center p-2 rounded hover:bg-gray-700 hover:text-white transition-colors duration-200"
-                        >
-                            <ArrowRightEndOnRectangleIcon className="h-6 w-6 text-white mr-2" />
-                            Logout
-                        </Link>
-                    </div>
-                </div>
-            </nav> */}
             <Navigation users={users} logout={logout} />
             <main>
                 <Outlet />

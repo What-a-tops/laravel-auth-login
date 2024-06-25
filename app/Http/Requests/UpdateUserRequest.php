@@ -26,7 +26,7 @@ class UpdateUserRequest extends FormRequest
             'name' => 'required|string|max:255',
             'email' => 'required|string|unique:users,email,' . $this->id,
             'company' => 'required|string|max:255',
-            'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+            'phone' => 'required|digits:11',
             'password' => [
                 'confirmed',
                 Password::min(5)->letters()

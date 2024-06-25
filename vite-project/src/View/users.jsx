@@ -13,9 +13,10 @@ import {
 } from "@heroicons/react/24/outline";
 import TextInput from "../Components/TextInput";
 import { useStateContext } from "../Context/contextProvider";
+import Modal from "../Components/Modal";
 
 function users() {
-    let { user } = useStateContext();
+    let { user, setUser, setToken } = useStateContext();
     const users = (() => {
         try {
             return JSON.parse(user);
@@ -29,15 +30,19 @@ function users() {
     const [contacts, setContacts] = useState([]);
     const [loading, setLoading] = useState(false);
 
+    const [openModal, setOpenModal] = useState(false);
+
+    const handleOpenModal = () => setOpenModal(true);
+    const handleCloseModal = () => setOpenModal(false);
+
     useEffect(() => {
         getUsers();
     }, [page]);
 
-    const onDeleteClick = async (user) => {
-        if (!window.confirm("Are you sure you want to delete this user?")) {
-            return;
-        }
-        await axiosClient.delete(`/users/${user.id}`).then(() => {
+    const onDeleteClick = async (id) => {
+        await axiosClient.delete(`/users/${id}`).then(() => {
+            setUser(null);
+            setToken(null);
             getUsers();
         });
     };
@@ -161,14 +166,29 @@ function users() {
                                                                 <button
                                                                     type="button"
                                                                     className="px-3 py-1 text-gray-900 hover:bg-red-500 rounded-md hover:rounded hover:shadow hover:text-white transition-colors duration-200"
-                                                                    onClick={() =>
-                                                                        onDeleteClick(
-                                                                            u
-                                                                        )
+                                                                    onClick={
+                                                                        handleOpenModal
                                                                     }
                                                                 >
                                                                     <TrashIcon className="size-6 text-dark-500" />
                                                                 </button>
+                                                                <Modal
+                                                                    open={
+                                                                        openModal
+                                                                    }
+                                                                    onClose={
+                                                                        handleCloseModal
+                                                                    }
+                                                                    onConfirm={
+                                                                        onDeleteClick
+                                                                    }
+                                                                    showCloseButton={
+                                                                        true
+                                                                    }
+                                                                    title="Delete Contact"
+                                                                    message="Are you sure you want to Delete your account? This action cannot be undone."
+                                                                    id={u.id}
+                                                                />
                                                             </>
                                                         ) : (
                                                             <Link

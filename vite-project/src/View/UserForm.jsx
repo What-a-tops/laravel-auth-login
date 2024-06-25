@@ -5,6 +5,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import TextInput from "../Components/TextInput";
 import InputError from "../Components/InputError";
 import InputLabel from "../Components/InputLabel";
+import Modal from "../Components/Modal";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 
 function UserForm() {
@@ -22,6 +23,10 @@ function UserForm() {
 
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState(null);
+
+    const [openModal, setOpenModal] = useState(false);
+    const [message, setMessage] = useState("");
+    const handleCloseModal = () => setOpenModal(false);
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -50,17 +55,20 @@ function UserForm() {
 
         const userData = {
             ...user,
-            password: user.password || undefined, // Send password only if it's set
+            password: user.password || undefined,
             password_confirmation: user.password_confirmation || undefined,
         };
 
         try {
             if (user.id) {
                 await axiosClient.put(`/users/${user.id}`, userData);
+                setMessage("User Updated.");
             } else {
                 await axiosClient.post("/users", userData);
+                setMessage("User Added.");
             }
-            navigate("/users");
+            setOpenModal(true);
+            // navigate("/users");
         } catch (err) {
             const response = err.response;
             if (response && response.status === 422) {
@@ -69,6 +77,10 @@ function UserForm() {
         } finally {
             setLoading(false);
         }
+    };
+
+    const onConfirm = async () => {
+        navigate("/users");
     };
 
     return (
@@ -278,6 +290,14 @@ function UserForm() {
                     </div>
                 </div>
             )}
+            <Modal
+                open={openModal}
+                onConfirm={onConfirm}
+                onClose={handleCloseModal}
+                showCloseButton={false}
+                title="Success!"
+                message={message}
+            />
         </div>
     );
 }
