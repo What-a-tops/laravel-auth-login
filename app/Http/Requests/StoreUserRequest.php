@@ -28,10 +28,12 @@ class StoreUserRequest extends FormRequest
             'company' => 'required|string|max:255',
             'phone' => 'required|digits:11',
             'password' => [
+                'required',
                 'confirmed',
                 Password::min(5)->letters()
             ],
             'password_confirmation' => [
+                'required',
                 Password::min(5)->letters()
             ]
         ];

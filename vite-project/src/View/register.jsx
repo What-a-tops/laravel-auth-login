@@ -32,8 +32,8 @@ function register() {
 
         await axiosClient
             .post("/register", payload)
+            // eslint-disable-next-line no-unused-vars
             .then(({ data }) => {
-                console.log(data);
                 setOpenModal(true);
                 // navigate("/login");
             })
@@ -50,7 +50,8 @@ function register() {
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                     <form
                         onSubmit={submit}
-                        className="space-y-6 border p-6 rounded-md shadow-sm"
+                        className="space-y-6 border p-6 rounded-md shadow"
+                        noValidate
                     >
                         <div className="mt-4">
                             <InputLabel htmlFor="user_name" value="Name" />

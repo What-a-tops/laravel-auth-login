@@ -4,9 +4,10 @@ import { useStateContext } from "../Context/contextProvider";
 import axiosClient from "../axiosClient";
 import { useEffect } from "react";
 import Navigation from "../View/Navigation";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
 
 function DefaultLayout() {
+    const navigate = useNavigate();
     let { token, user, setUser, setToken } = useStateContext();
 
     const checkSession = () => {
@@ -18,11 +19,21 @@ function DefaultLayout() {
 
     const logout = async (e) => {
         if (e) e.preventDefault();
-        await axiosClient.get("/logout").then(() => {
+        try {
+            await axiosClient.get("/logout");
             localStorage.clear();
             setUser(null);
             setToken(null);
-        });
+        } catch (e) {
+            if (e.response) {
+                if (e.response.status === 401) {
+                    localStorage.clear();
+                    setUser(null);
+                    setToken(null);
+                    navigate("/login");
+                }
+            }
+        }
     };
 
     useEffect(() => {

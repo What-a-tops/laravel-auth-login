@@ -2,7 +2,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useEffect, useState } from "react";
 import axiosClient from "../axiosClient";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Pagination from "./pagination";
 import {
     TrashIcon,
@@ -16,6 +16,7 @@ import { useStateContext } from "../Context/contextProvider";
 import Modal from "../Components/Modal";
 
 function users() {
+    const navigate = useNavigate();
     let { user, setUser, setToken } = useStateContext();
     const users = (() => {
         try {
@@ -55,7 +56,13 @@ function users() {
                 setLoading(false);
                 setContacts(data);
             })
-            .catch(() => {
+            .catch((e) => {
+                if (e.response.status === 401) {
+                    localStorage.clear();
+                    setUser(null);
+                    setToken(null);
+                    navigate("/login");
+                }
                 setLoading(false);
             });
     };

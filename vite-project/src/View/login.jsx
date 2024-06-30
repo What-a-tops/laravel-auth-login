@@ -45,8 +45,9 @@ function login() {
 
             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
                 <form
-                    className="space-y-6 border p-6 rounded-md shadow-sm"
+                    className="space-y-6 border p-6 rounded-md shadow"
                     onSubmit={submit}
+                    noValidate
                 >
                     <div className="mt-4">
                         <InputLabel htmlFor="user_email" value="Email" />

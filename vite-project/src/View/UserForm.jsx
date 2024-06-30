@@ -25,7 +25,7 @@ function UserForm() {
     const [errors, setErrors] = useState(null);
 
     const [openModal, setOpenModal] = useState(false);
-    const [message, setMessage] = useState("");
+    const [message, setMessage] = useState(null);
     const handleCloseModal = () => setOpenModal(false);
 
     useEffect(() => {
@@ -34,7 +34,16 @@ function UserForm() {
                 setLoading(true);
                 try {
                     const { data } = await axiosClient.get(`/users/${id}`);
-                    setUser(data);
+                    const updatedData = {
+                        id: data.id,
+                        name: data.name || "",
+                        company: data.company || "",
+                        phone: data.phone || "",
+                        email: data.email || "",
+                        password: "",
+                        password_confirmation: "",
+                    };
+                    setUser(updatedData);
                 } catch (err) {
                     const response = err.response;
                     if (response && response.status === 404) {
@@ -47,6 +56,14 @@ function UserForm() {
         };
         fetchUser();
     }, [id, navigate]);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setUser((prevUser) => ({
+            ...prevUser,
+            [name]: value,
+        }));
+    };
 
     const onSubmit = async (ev) => {
         ev.preventDefault();
@@ -68,7 +85,6 @@ function UserForm() {
                 setMessage("User Added.");
             }
             setOpenModal(true);
-            // navigate("/users");
         } catch (err) {
             const response = err.response;
             if (response && response.status === 422) {
@@ -104,6 +120,7 @@ function UserForm() {
                             <form
                                 onSubmit={onSubmit}
                                 className="p-4 sm:p-8 bg-white sm:rounded-lg"
+                                noValidate
                             >
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
@@ -120,12 +137,7 @@ function UserForm() {
                                                 className="mt-1 block w-full"
                                                 isFocused={true}
                                                 placeholder="Enter Name"
-                                                onChange={(ev) =>
-                                                    setUser({
-                                                        ...user,
-                                                        name: ev.target.value,
-                                                    })
-                                                }
+                                                onChange={handleChange}
                                             />
                                             {errors?.name && (
                                                 <InputError
@@ -146,12 +158,7 @@ function UserForm() {
                                                 value={user.email}
                                                 className="mt-1 block w-full"
                                                 placeholder="Enter Email"
-                                                onChange={(ev) =>
-                                                    setUser({
-                                                        ...user,
-                                                        email: ev.target.value,
-                                                    })
-                                                }
+                                                onChange={handleChange}
                                             />
                                             {errors?.email && (
                                                 <InputError
@@ -174,13 +181,7 @@ function UserForm() {
                                                 value={user.company}
                                                 className="mt-1 block w-full"
                                                 placeholder="Enter Company"
-                                                onChange={(ev) =>
-                                                    setUser({
-                                                        ...user,
-                                                        company:
-                                                            ev.target.value,
-                                                    })
-                                                }
+                                                onChange={handleChange}
                                             />
                                             {errors?.company && (
                                                 <InputError
@@ -201,12 +202,7 @@ function UserForm() {
                                                 value={user.phone}
                                                 className="mt-1 block w-full"
                                                 placeholder="Enter Phone"
-                                                onChange={(ev) =>
-                                                    setUser({
-                                                        ...user,
-                                                        phone: ev.target.value,
-                                                    })
-                                                }
+                                                onChange={handleChange}
                                             />
                                             {errors?.phone && (
                                                 <InputError
@@ -229,12 +225,7 @@ function UserForm() {
                                         value={user.password}
                                         className="mt-1 block w-full"
                                         placeholder="Enter Password"
-                                        onChange={(ev) =>
-                                            setUser({
-                                                ...user,
-                                                password: ev.target.value,
-                                            })
-                                        }
+                                        onChange={handleChange}
                                     />
                                     {errors?.password && (
                                         <InputError
@@ -255,13 +246,7 @@ function UserForm() {
                                         value={user.password_confirmation}
                                         className="mt-1 block w-full"
                                         placeholder="Enter Confirm Password"
-                                        onChange={(ev) =>
-                                            setUser({
-                                                ...user,
-                                                password_confirmation:
-                                                    ev.target.value,
-                                            })
-                                        }
+                                        onChange={handleChange}
                                     />
                                     {errors?.password && (
                                         <InputError
